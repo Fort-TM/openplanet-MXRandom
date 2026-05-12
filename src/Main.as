@@ -1,6 +1,7 @@
 MainWindow mainMenu;
 RMCWindow rmcMenu;
 DebugWindow debugMenu;
+StatsWindow statsMenu;
 
 void RenderMenu() {
 #if TMNEXT
@@ -57,6 +58,7 @@ void RenderInterface() {
 #endif
     mainMenu.Render();
     debugMenu.Render();
+    statsMenu.Render();
 }
 
 void Render() {
@@ -85,8 +87,8 @@ UI::InputBlocking OnKeyPress(bool down, VirtualKey key) {
         bool withFilters = key == PluginSettings::S_QuickMapFiltersKey;
         startnew(MX::LoadRandomMap, withFilters);
         return UI::InputBlocking::Block;
-    } 
-    
+    }
+
     if (key == PluginSettings::S_WindowToggle) {
         rmcMenu.Toggle();
         return UI::InputBlocking::Block;
@@ -177,6 +179,11 @@ void Main() {
             }
         }
     }
+
+    if (RunHistoryJson.GetType() == Json::Type::Null) {
+        RunHistoryJson = Json::Array();
+    }
+
     RMC::FetchConfig();
 #if DEPENDENCY_NADEOSERVICES
     MXNadeoServicesGlobal::LoadNadeoLiveServices();

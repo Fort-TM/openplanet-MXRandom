@@ -27,6 +27,18 @@ namespace RMC {
         Together
     }
 
+    enum MapResult {
+        None,
+        Medal,
+        Below_Medal,
+        Skip,
+        Free_Skip,
+        Timer,
+        Broken_Skip,
+        Force_Switch,
+        Last
+    }
+
     enum Category {
         Standard,
         Classic,

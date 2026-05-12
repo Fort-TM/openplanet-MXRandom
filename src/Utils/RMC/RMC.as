@@ -130,6 +130,7 @@ class RMC {
 
         @currentMap = MX::MapInfo(DataJson["recentlyPlayed"][0]);
         playedMaps.InsertLast(currentMap);
+        currentMap.TrackStats();
         StartTimer();
 
         UI::ShowNotification("\\$080" + ModeName + " started!", "Good Luck!");
@@ -205,6 +206,7 @@ class RMC {
         json["PBOnMap"] = PBOnMap;
         json["Settings"] = RunConfig.ToJson();
         json["IsMapInvalidated"] = IsMapInvalidated;
+        json["GameMode"] = this.Mode;
 
         Json::Value mapsArray = Json::Array();
         for (uint i = 0; i < playedMaps.Length; i++) {
@@ -463,6 +465,7 @@ class RMC {
             UI::SameLine();
 
             if (UI::Button("Force switch")) {
+                currentMap.SetStats(RMC::MapResult::Force_Switch, TimeLeft, TimeSpentMap, PBOnMap);
                 startnew(CoroutineFunc(SwitchMap));
             }
         } else if (IsInited && TM::IsMapLoaded()) {
@@ -556,6 +559,7 @@ class RMC {
                 UI::SameLine();
 
                 if (UI::Button("Force Switch")) {
+                    currentMap.SetStats(RMC::MapResult::Force_Switch, TimeLeft, TimeSpentMap, PBOnMap);
                     startnew(CoroutineFunc(SwitchMap));
                 }
 
@@ -612,6 +616,7 @@ class RMC {
             UI::BeginDisabled(skipsLeft == 0);
 
             if (UI::FlexButton(Icons::PlayCircleO + "Free Skip (" + skipsLeft + " left)")) {
+                currentMap.SetStats(RMC::MapResult::Free_Skip, TimeLeft, TimeSpentMap, PBOnMap);
                 FreeSkipsUsed++;
                 DataManager::SaveCurrentRunData();
                 Log::Trace("RMC: Skipping map");
@@ -626,6 +631,7 @@ class RMC {
                 "Standard RMC rules allow 1 Free skip. If the map is broken, please use the button below instead."
             );
         } else if (ModeHasBelowMedal && UI::FlexButton(Icons::PlayCircleO + " Take " + tostring(Medals(RunConfig.GoalMedal - 1)) + " medal")) {
+            currentMap.SetStats(RMC::MapResult::Below_Medal, TimeLeft, TimeSpentMap, PBOnMap);
             BelowMedalCount++;
             Log::Trace("RMC: Skipping map");
             UI::ShowNotification("Please wait...");
@@ -735,8 +741,10 @@ class RMC {
                     RMC::ShowTimer = false;
 
                     if (!UserEndedRun) {
+                        currentMap.SetStats(RMC::MapResult::Timer, TimeLeft, TimeSpentMap, PBOnMap);
                         GameEndNotification();
                         DataManager::RemoveCurrentSaveFile();  // run ended on time -> no point in saving it as it can't be continued
+                        DataManager::SaveRunToHistory();
                         startnew(CoroutineFunc(SubmitToLeaderboard));
                     }
 
@@ -828,6 +836,7 @@ class RMC {
                     if ((!inverse && score <= GoalTime) || (inverse && score >= GoalTime)) {
                         GoalMedalCount++;
                         GotGoalMedalNotification();
+                        currentMap.SetStats(RMC::MapResult::Medal, TimeLeft, TimeSpentMap, PBOnMap);
                         GotGoalMedal = true;
                         DataManager::SaveCurrentRunData();
                     } else if (ModeHasBelowMedal && !GotBelowMedal && ((!inverse && score <= BelowGoalTime) || (inverse && score >= BelowGoalTime))) {
@@ -909,6 +918,7 @@ class RMC {
         @currentMap = nextMap;
         playedMaps.InsertLast(currentMap);
         startnew(CoroutineFunc(PreloadNextMap));
+        currentMap.TrackStats();
 
         Log::Trace("[SwitchMap] Waiting for map to be loaded.");
 

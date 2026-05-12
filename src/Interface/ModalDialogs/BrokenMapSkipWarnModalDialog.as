@@ -34,6 +34,7 @@ class BrokenMapSkipWarnModalDialog : ModalDialog {
 #endif
             run.TimeLeft += run.TimeSpentMap;
             run.TotalTime -= run.TimeSpentMap;
+            run.currentMap.SetStats(RMC::MapResult::Broken_Skip, run.TimeLeft, run.TimeSpentMap, run.PBOnMap);
             startnew(CoroutineFunc(run.SwitchMap));
         }
     }

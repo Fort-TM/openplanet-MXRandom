@@ -128,6 +128,7 @@ class RMT : RMC {
         Log::Trace("[SetupMapStart] Loading map " + currentMap.toString());
         Log::LoadingMapNotification(currentMap);
         DataManager::SaveMapToRecentlyPlayed(currentMap);
+        currentMap.TrackStats();
 
         Log::Trace("[SetupMapStart] Setting up RMT room.");
 
@@ -219,6 +220,7 @@ class RMT : RMC {
 
         Log::LoadingMapNotification(currentMap);
         DataManager::SaveMapToRecentlyPlayed(currentMap);
+        currentMap.TrackStats();
 
         Log::Trace("[SwitchMap] Setting up next RMT map.");
         MXNadeoServicesGlobal::ClubRoomSetMapAndSwitchAsync(RMTRoom, currentMap.MapUid);
@@ -289,9 +291,11 @@ class RMT : RMC {
 
             if (!IsPaused) {
                 if (!UserEndedRun && (!IsRunning || TimeLeft == 0)) {
+                    currentMap.SetStats(RMC::MapResult::Timer, TimeLeft, TimeSpentMap, PBOnMap);
                     IsRunning = false;
                     RMC::ShowTimer = false;
                     GameEndNotification();
+                    DataManager::SaveRunToHistory();
 #if DEPENDENCY_BETTERCHAT
                     BetterChat::SendChatMessage(Icons::Users + " " + ModeName + " ended, thanks for playing!");
                     sleep(200);
@@ -438,6 +442,7 @@ class RMT : RMC {
             UI::BeginDisabled(skipsLeft == 0);
 
             if (UI::Button(Icons::PlayCircleO + "Free Skip (" + skipsLeft + " left)")) {
+                currentMap.SetStats(RMC::MapResult::Free_Skip, TimeLeft, TimeSpentMap, PBOnMap);
                 FreeSkipsUsed++;
                 Log::Trace("RMT: Skipping map");
                 UI::ShowNotification("Please wait...");
@@ -456,6 +461,7 @@ class RMT : RMC {
                 "If the map is broken, please use the button below instead."
             );
         } else if (ModeHasBelowMedal && UI::Button(Icons::PlayCircleO + " Take " + tostring(Medals(RunConfig.GoalMedal - 1)) + " medal")) {
+            currentMap.SetStats(RMC::MapResult::Below_Medal, TimeLeft, TimeSpentMap, playerGotBelowGoal.time, playerGotBelowGoal.name);
             BelowMedalCount++;
             RMTPlayerScore@ playerScored = GetPlayerScore(playerGotBelowGoal);
             playerScored.AddBelowGoal();
@@ -662,6 +668,7 @@ class RMT : RMC {
                 }
 
                 if (bestPB.time <= GoalTime) {
+                    currentMap.SetStats(RMC::MapResult::Medal, TimeLeft, TimeSpentMap, bestPB.time, bestPB.name);
                     GotGoalMedal = true;
                     GoalMedalCount++;
                     @playerGotGoal = bestPB;

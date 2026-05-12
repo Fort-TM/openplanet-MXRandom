@@ -63,8 +63,6 @@ namespace DataManager {
         DataJson = Json::Object();
         DataJson["version"] = PLUGIN_VERSION;
         DataJson["recentlyPlayed"] = Json::Array();
-        DataJson["randomMapChallenge"] = Json::Object();
-        DataJson["randomMapChallenge"]["recentRaces"] = Json::Array();
 
         if (save) SaveData();
     }
@@ -114,7 +112,7 @@ namespace DataManager {
 
                 save["GotGoalMedal"] = bool(save["GotGoalMedalOnMap"]);
                 save.Remove("GotGoalMedalOnMap");
-                
+
                 if (save.HasKey("GotBelowMedalOnMap")) {
                     save["GotBelowMedal"] = bool(save["GotBelowMedalOnMap"]);
                     save.Remove("GotBelowMedalOnMap");
@@ -200,5 +198,30 @@ namespace DataManager {
 
         DataJson["recentlyPlayed"] = arr;
         DataManager::SaveData();
+    }
+
+    void SaveRunToHistory() {
+        Json::Value@ runData = RMC::currentRun.ToJson();
+        runData["PlayedAt"] = Time::Stamp;
+
+        Log::Trace("[SaveRunToHistory] Saving run to history file");
+        Log::Trace("[SaveRunToHistory] JSON: " + Json::Write(runData, true));
+
+        Json::Value arr = Json::Array();
+        arr.Add(runData);
+
+        for (uint i = 0; i < RunHistoryJson.Length; i++) {
+            arr.Add(RunHistoryJson[i]);
+
+            if (arr.Length >= 10) {
+                break;
+            }
+        }
+
+        RunHistoryJson = arr;
+
+        Json::ToFile(HISTORY_JSON_LOCATION, RunHistoryJson, true);
+
+        Log::Trace("[SaveRunToHistory] Succesfully saved run to history file");
     }
 }

@@ -7,6 +7,12 @@ int SortString(const string &in a, const string &in b) {
     return 0;
 }
 
+string Pluralize(const string &in word, int count, const string &in suffix = "s") {
+    if (count == 1) return word;
+
+    return word + suffix;
+}
+
 // This is only used to parse category tags to a dictionary
 // don't use it if your JSON is not an object containing strings!
 dictionary JsonToDict(const Json::Value@ json) {
@@ -30,5 +36,6 @@ dictionary JsonToDict(const Json::Value@ json) {
 
         converted.Set(keys[i], string(value));
     }
+
     return converted;
 }

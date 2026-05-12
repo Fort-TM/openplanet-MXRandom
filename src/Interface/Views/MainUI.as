@@ -73,6 +73,39 @@ namespace MainUIView {
         UI::PopStyleColor(2);
     }
 
+    void RunsHistoryTab() {
+        if (RunHistoryJson.GetType() == Json::Type::Null || RunHistoryJson.Length == 0) {
+            UI::Text("No recently completed runs");
+            return;
+        }
+
+        UI::PushStyleColor(UI::Col::TableRowBgAlt, vec4(0.10f, 0.10f, 0.10f, 1));
+        UI::PushStyleColor(UI::Col::TableRowBg, vec4(0.13f, 0.13f, 0.13f, 1));
+        UI::PushStyleVar(UI::StyleVar::CellPadding, UI::GetStyleVarVec2(UI::StyleVar::CellPadding) + vec2(6, 1));
+
+        if (UI::BeginTable("Runs", 8, UI::TableFlags::ScrollY | UI::TableFlags::NoKeepColumnsVisible | UI::TableFlags::RowBg | UI::TableFlags::PadOuterX)) {
+            UI::TableSetupScrollFreeze(0, 1);
+            float scale = UI::GetScale();
+
+            UI::TableSetupColumn("Mode", UI::TableColumnFlags::WidthStretch);
+            UI::TableSetupColumn("Category", UI::TableColumnFlags::WidthFixed, 90 * scale);
+            UI::TableSetupColumn("Medal", UI::TableColumnFlags::WidthFixed, 90 * scale);
+            UI::TableSetupColumn("Played at", UI::TableColumnFlags::WidthFixed);
+            UI::TableSetupColumn("Total time", UI::TableColumnFlags::WidthFixed, 135 * scale);
+            UI::TableSetupColumn("Medals", UI::TableColumnFlags::WidthFixed, 60 * scale);
+            UI::TableSetupColumn("Skips", UI::TableColumnFlags::WidthFixed, 60 * scale);
+            UI::TableSetupColumn("", UI::TableColumnFlags::WidthFixed);
+            UI::TableHeadersRow();
+
+            Render::RunsHistory();
+
+            UI::EndTable();
+        }
+
+        UI::PopStyleVar();
+        UI::PopStyleColor(2);
+    }
+
     void ChangelogTabs() {
         GH::CheckReleasesReq();
 

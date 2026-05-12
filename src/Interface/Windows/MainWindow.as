@@ -17,6 +17,13 @@ class MainWindow : Window {
             UI::EndTabItem();
         }
 
+        if (UI::BeginTabItem(Icons::ListUl + " Runs")) {
+            UI::BeginChild("RunsChild");
+            MainUIView::RunsHistoryTab();
+            UI::EndChild();
+            UI::EndTabItem();
+        }
+
         if (UI::BeginTabItem(Icons::Cogs + " Settings")) {
             PluginSettings::Render();
             UI::EndTabItem();

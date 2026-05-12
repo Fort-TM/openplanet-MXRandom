@@ -76,6 +76,7 @@ class RMObjective : RMC {
 
         if (UI::Button(Icons::PlayCircleO + " Skip")) {
             Skips += 1;
+            currentMap.SetStats(RMC::MapResult::Skip, TimeLeft, TimeSpentMap, PBOnMap);
             Log::Trace("ObjectiveMode: Skipping map");
             UI::ShowNotification("Please wait...");
             startnew(CoroutineFunc(SwitchMap));
@@ -130,6 +131,7 @@ class RMObjective : RMC {
                     IsPaused = true;
                 } else if (GoalMedalCount >= RunConfig.RMO_Goal) {
                     UI::ShowNotification("\\$071" + Icons::Trophy + " You got the " + tostring(RunConfig.GoalMedal) + " medal!", "You have reached your goal in " + RMC::FormatTimer(TotalTime));
+                    DataManager::SaveRunToHistory();
                     IsRunning = false;
                     RMC::ShowTimer = false;
                     if (PluginSettings::RMC_ExitMapOnEndTime) {
@@ -193,6 +195,7 @@ class RMObjective : RMC {
                         GoalMedalCount++;
                         GotGoalMedalNotification();
                         GotGoalMedal = true;
+                        currentMap.SetStats(RMC::MapResult::Medal, TimeLeft, TimeSpentMap, PBOnMap);
                     }
 
                     sleep(1000);

@@ -179,7 +179,7 @@ namespace RMC {
                 if (MXNadeoServicesGlobal::foundRoom !is null) {
                     UI::Text("Club: " + Text::OpenplanetFormatCodes(MXNadeoServicesGlobal::foundRoom.clubName));
                     UI::Text("Room: " + Text::OpenplanetFormatCodes(MXNadeoServicesGlobal::foundRoom.name));
-    
+
                     bool inServer = TM::IsInServer();
 
                     UI::BeginDisabled(!inServer || PluginSettings::MapType != MapTypes::Race);
@@ -286,12 +286,27 @@ namespace RMC {
             } else if (currentRun.Mode == GameMode::Objective) {
                 UI::AlignTextToFramePadding();
                 UI::Text("Total time: " + RMC::FormatTimer(currentRun.TotalTime));
+            }
+
+            if (!currentRun.UserEndedRun && (currentRun.GoalMedalCount > 0 || currentRun.BelowMedalCount > 0)) {
+                UI::Separator();
+
+                if (UI::PurpleButton(Icons::BarChart + " View Statistics", vec2(-1, 0))) {
+                    if (!UI::IsOverlayShown()) {
+                        UI::ShowOverlay();
+                    }
+
+                    startnew(CoroutineFuncUserdata(statsMenu.LoadStats), currentRun.ToJson());
+                    statsMenu.Open();
+                }
+            }
 #if TMNEXT
-            } else if (currentRun.Mode == GameMode::Together) {
+            if (currentRun.Mode == GameMode::Together) {
+                UI::Separator();
                 RMT@ run = cast<RMT>(currentRun);
                 run.RenderScores();
-#endif
             }
+#endif
         }
     }
 }

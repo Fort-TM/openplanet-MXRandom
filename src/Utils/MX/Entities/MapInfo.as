@@ -28,6 +28,18 @@ namespace MX {
         Json::Value@ jsonCache;
         PrepatchMapTag@ PrepatchTag;
 
+        // Stats
+        int Attempts = 0;
+        int TimeSpent;
+        int SessionPB;
+        int GoalTime;
+        RMC::MapResult Result;
+        string PlayerName; // for RMT
+        int TimerStart;
+        int TimerEnd;
+
+        bool CountAttempts = true;
+
         MapInfo(const Json::Value &in json) {
             try {
                 MapId = json["MapId"];
@@ -114,6 +126,15 @@ namespace MX {
                 }
 
                 @PrepatchTag = RMC::config.GetPrepatchTag(this);
+
+                Attempts = json.Get("Attempts", 0);
+                SessionPB = json.Get("SessionPB", -1);
+                GoalTime = json.Get("GoalTime", -1);
+                TimeSpent = json.Get("TimeSpent", 0);
+                TimerStart = json.Get("TimerStart", 0);
+                TimerEnd = json.Get("TimerEnd", 0);
+                Result = RMC::MapResult(int(json.Get("Result", 0)));
+                PlayerName = json.Get("PlayerName", "");
             } catch {
                 Name = json["Name"];
                 Log::Warn("Error parsing infos for the map: " + Name + "\nReason: " + getExceptionInfo(), true);
@@ -167,6 +188,15 @@ namespace MX {
 
                 json["Tags"] = tagArray;
 
+                json["Attempts"] = Attempts;
+                json["TimeSpent"] = TimeSpent;
+                json["Result"] = Result;
+                json["SessionPB"] = SessionPB;
+                json["GoalTime"] = GoalTime;
+                json["PlayerName"] = PlayerName;
+                json["TimerStart"] = TimerStart;
+                json["TimerEnd"] = TimerEnd;
+
                 @jsonCache = json;
             } catch {
                 Log::Error("Error converting map info to JSON for map " + Name, true);
@@ -175,12 +205,121 @@ namespace MX {
             return json;
         }
 
+        void TrackStats() {
+            Log::Trace("Started tracking stats for " + this.toString());
+
+            TimerStart = RMC::currentRun.TimeLeft;
+            startnew(CoroutineFunc(AttemptsLoop));
+        }
+
+        void AttemptsLoop() {
+            while (!TM::IsPlayerReady()) {
+                yield();
+            }
+
+            bool handled = false;
+
+            while (CountAttempts) {
+                yield();
+
+                if (RMC::currentRun is null || (!RMC::currentRun.IsRunning && !RMC::currentRun.IsStarting)) {
+                    break;
+                }
+
+                CTrackMania@ app = cast<CTrackMania>(GetApp());
+
+                if (!TM::IsMapCorrect(MapUid)) {
+                    sleep(100);
+                    continue;
+                }
+
+                auto playground = app.CurrentPlayground;
+
+                if (playground is null || playground.GameTerminals.Length == 0) {
+                    sleep(100);
+                    continue;
+                }
+
+#if TMNEXT
+                auto player = cast<CSmPlayer>(playground.GameTerminals[0].ControlledPlayer);
+
+                if (player is null) {
+                    continue;
+                }
+
+                CSmScriptPlayer::EPost state = cast<CSmScriptPlayer>(player.ScriptAPI).Post;
+#else
+                auto player = cast<CTrackManiaPlayer>(playground.GameTerminals[0].ControlledPlayer);
+
+                if (player is null) {
+                    continue;
+                }
+
+                CTrackManiaScriptPlayer::ERaceState state = player.ScriptAPI.RaceState;
+#endif
+
+                switch (state) {
+#if TMNEXT
+                    case CSmScriptPlayer::EPost::Char:
+#else
+                    case CTrackManiaScriptPlayer::ERaceState::BeforeStart:
+#endif
+                        handled = false;
+                        break;
+
+                    default:
+                        if (!handled) {
+                            handled = true;
+                            Attempts++;
+                        }
+
+                        break;
+                }
+
+                sleep(100);
+            }
+
+            Log::Trace("Finished tracking attempts for " + this.toString());
+            Log::Trace("Total attempts: " + Attempts);
+        }
+
+        void SetStats(RMC::MapResult result, int timerEnd, int timeSpent, int pb, const string &in playerName = "") {
+            Log::Trace("Setting stats for " + this.toString());
+            Log::Trace("Result: " + tostring(result));
+            Log::Trace("PB: " + Time::Format(pb));
+
+            CountAttempts = false;
+            Result = result;
+            TimeSpent = timeSpent;
+            TimerEnd = timerEnd;
+            SessionPB = pb;
+            GoalTime = GetMedalTime(RMC::currentRun.RunConfig.GoalMedal, RMC::currentRun.RunConfig.CalculateMedals);
+            PlayerName = playerName;
+
+            // Update cache if there's one
+            if (jsonCache !is null) {
+                jsonCache["Attempts"] = Attempts;
+                jsonCache["TimeSpent"] = TimeSpent;
+                jsonCache["TimerStart"] = TimerStart;
+                jsonCache["TimerEnd"] = TimerEnd;
+                jsonCache["Result"] = Result;
+                jsonCache["SessionPB"] = SessionPB;
+                jsonCache["GoalTime"] = GoalTime;
+                jsonCache["PlayerName"] = PlayerName;
+
+                Log::Trace("Updated JSON cache for " + this.toString());
+                Log::Trace("New cache: " + Json::Write(jsonCache, true));
+            }
+
+            Log::Trace("Succesfully set stats for " + this.toString());
+        }
+
         bool get_IsUploadedToServers() {
 #if TMNEXT
             if (this.OnlineMapId != "") {
                 return true;
-            } 
-            
+            }
+
             return MXNadeoServicesGlobal::CheckIfMapExistsAsync(this.MapUid);
 #else
             return false;

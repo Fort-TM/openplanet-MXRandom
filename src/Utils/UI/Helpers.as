@@ -138,6 +138,33 @@ namespace UI {
 
     // Text
 
+    string TextEllipsis(const string &in renderText, float maxLength, float fontSize = 0) {
+        string truncatedText = renderText;
+        if (fontSize == 0) fontSize = UI::GetFontSize();
+
+        const float textWidth = UI::MeasureString(renderText, null, fontSize).x;
+
+        if (textWidth > maxLength) {
+            const float ellipsisLength = UI::MeasureString("...", null, fontSize).x;
+
+            int textLength = 0;
+
+            for (int i = 0; i < renderText.Length; i++) {
+                float currentWidth = UI::MeasureString(renderText.SubStr(0, i), null, fontSize).x;
+
+                if (currentWidth + ellipsisLength >= maxLength) {
+                    break;
+                }
+
+                textLength = i;
+            }
+
+            truncatedText = renderText.SubStr(0, textLength) + "...";
+        }
+
+        return truncatedText;
+    }
+
     // Original code from the plugin Ultimate Medals (https://openplanet.dev/plugin/ultimatemedals)
     // Copyright by Phlarx and Miss
     // Fort modified it in 2025

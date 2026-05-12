@@ -76,6 +76,7 @@ class RMS : RMC {
         UI::BeginDisabled(IsSwitchingMap);
 
         if (UI::Button(Icons::PlayCircleO + " Skip")) {
+            currentMap.SetStats(RMC::MapResult::Skip, TimeLeft, TimeSpentMap, PBOnMap);
             Skips += 1;
             Log::Trace("RMS: Skipping map");
             UI::ShowNotification("Please wait...");
