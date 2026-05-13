@@ -69,7 +69,7 @@ class RMC {
                     Json::Value@ map = saveMaps[i];
                     playedMaps.InsertLast(MX::MapInfo(map));
                 } catch {
-                    Log::Error("Error converting map in save file.");
+                    Log::Error("[LoadSave] Error converting map in save file:" + getExceptionInfo());
                 }
             }
         }
@@ -605,7 +605,6 @@ class RMC {
 
         UI::EndDisabled();
     }
-
 
     void SkipButtons() {
         UI::BeginDisabled(IsSwitchingMap);

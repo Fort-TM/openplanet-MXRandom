@@ -177,7 +177,7 @@ namespace UI {
 
     void ScrollingText(const string &in text) {
         vec2 size = UI::MeasureString(text);
-        vec2 region = UI::GetContentRegionAvail().x; 
+        vec2 region = UI::GetContentRegionAvail().x;
 
         if (size.x < region.x) {
             UI::Text(text);

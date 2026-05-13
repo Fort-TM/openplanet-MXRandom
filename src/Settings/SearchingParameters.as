@@ -22,7 +22,7 @@ namespace PluginSettings {
 
     [Setting hidden]
     bool RandomNameAuthorFilter = false;
-    
+
     [Setting hidden]
     string ExcludedTerms = "";
 
@@ -129,7 +129,7 @@ namespace PluginSettings {
             ExcludeMapTagsArr = {6, 10, 20, 39};
 #endif
         }
-    
+
         UI::PaddedHeaderSeparator("Length");
 
         UseCustomLength = UI::Checkbox("Use custom length range for map search", UseCustomLength);
@@ -212,7 +212,7 @@ namespace PluginSettings {
         }
 
         UI::EndDisabled();
-        
+
         UI::PaddedHeaderSeparator("Map");
 
         UI::SetItemText("Map Name Filter:");
@@ -360,7 +360,7 @@ namespace PluginSettings {
                     continue;
                 }
 #endif
-    
+
                 UI::PushID("EnvironmentBtn" + i);
 
                 bool inArray = EnvironmentsArr.Find(envi) != -1;

@@ -180,7 +180,7 @@ class RMT : RMC {
         FreeSkipsUsed = 0;
         playedMaps.RemoveRange(0, playedMaps.Length);
         @playerGotGoal = null;
-        m_playerScores.RemoveRange(0, m_playerScores.Length);;
+        m_playerScores.RemoveRange(0, m_playerScores.Length);
         @playerGotGoal = null;
         @playerGotBelowGoal = null;
 

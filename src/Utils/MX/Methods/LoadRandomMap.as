@@ -30,7 +30,7 @@ namespace MX {
             return null;
         } else if (res["Results"].Length == 0) {
             if (customParameters) {
-                Log::Error("[GetRandomMap] Failed to find a random map with custom parameters");    
+                Log::Error("[GetRandomMap] Failed to find a random map with custom parameters");
             } else {
                 Log::Error("[GetRandomMap] Failed to find a random map without custom parameters. This should never happen!");
             }

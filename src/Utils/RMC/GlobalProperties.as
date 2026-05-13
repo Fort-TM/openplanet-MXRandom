@@ -10,7 +10,7 @@ namespace RMC {
     UI::Texture@ AuthorTex = UI::LoadTexture("src/Assets/Images/Author.png");
     UI::Texture@ WRTex = UI::LoadTexture("src/Assets/Images/WRTrophy.png");
 
-    array<UI::Texture@> MedalTextures = { 
+    array<UI::Texture@> MedalTextures = {
         BronzeTex,
         SilverTex,
         GoldTex,
