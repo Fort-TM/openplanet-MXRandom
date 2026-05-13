@@ -24,6 +24,7 @@ namespace MX {
         bool ServerSizeExceeded;
         bool AuthorBeaten;
         bool AuthorBeatable = true;
+        int OnlineRecordCount = 0;
         array<MapTag@> Tags;
         Json::Value@ jsonCache;
         PrepatchMapTag@ PrepatchTag;
@@ -57,6 +58,7 @@ namespace MX {
                 if (json.HasKey("PlayedAt") && json["PlayedAt"].GetType() != Json::Type::Null) PlayedAt = json["PlayedAt"];
                 else PlayedAt = Time::Stamp;
 
+                OnlineRecordCount = json.Get("OnlineRecordCount", OnlineRecordCount);
                 AuthorBeaten = json.Get("AuthorBeaten", AuthorBeaten);
                 AuthorBeatable = json.Get("AuthorBeatable", AuthorBeatable);
 
@@ -164,6 +166,7 @@ namespace MX {
                 json["AwardCount"] = AwardCount;
                 json["ServerSizeExceeded"] = ServerSizeExceeded;
                 json["Length"] = Length;
+                json["OnlineRecordCount"] = OnlineRecordCount;
                 json["AuthorBeatable"] = AuthorBeatable;
                 json["AuthorBeaten"] = AuthorBeaten;
 

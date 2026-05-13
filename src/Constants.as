@@ -80,6 +80,9 @@ const array<string> MAP_FIELDS_ARRAY = {
     "ServerSizeExceeded",
     "Tags",
     "Exebuild",
+#if TMNEXT
+    "OnlineRecordCount",
+#endif
     "AuthorBeaten",
     "AuthorBeatable"
 };
