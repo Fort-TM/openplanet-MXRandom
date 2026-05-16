@@ -267,16 +267,13 @@ class RunStatistics {
                 @WorstMap = map;
             }
 
-            // Only care about pace on map 3 onwards to avoid outliers
-            if (i >= 2) {
-                HighestPace = Math::Max(HighestPace, pace);
+            HighestPace = Math::Max(HighestPace, pace);
 
-                if (pace > 0) {
-                    if (LowestPace == 0) {
-                        LowestPace = pace;
-                    } else {
-                        LowestPace = Math::Min(LowestPace, pace);
-                    }
+            if (pace > 0) {
+                if (LowestPace == 0) {
+                    LowestPace = pace;
+                } else {
+                    LowestPace = Math::Min(LowestPace, pace);
                 }
             }
         }

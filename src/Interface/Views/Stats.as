@@ -91,10 +91,8 @@ namespace StatsView {
         UI::BeginChild("PaceChild", vec2(), UI::ChildFlags::AlwaysUseWindowPadding);
 
         UI::RenderStat("Lowest Pace", Text::Format("%.2f", stats.LowestPace));
-        UI::SetItemTooltip("Lowest pace map 3 onwards, to avoid outliers.");
 
         UI::RenderCenteredStat("Highest Pace", Text::Format("%.2f", stats.HighestPace));
-        UI::SetItemTooltip("Highest pace map 3 onwards, to avoid outliers.");
 
         UI::PaddedHeaderSeparator("Pace Graph");
 
