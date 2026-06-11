@@ -262,12 +262,9 @@ namespace MX {
 #if TMNEXT
         params.Set("vehicle", "1,2,3,4"); // prevent loading CharacterPilot maps
 #elif MP4
-        // We only want to use the other compatible titlepacks if the player isn't requesting specific environments or vehicles
-        bool customEnvimix = customParameters && (PluginSettings::Environments != "" || PluginSettings::Vehicles != "");
 
-        if (TM::CurrentTitlePack() == "TMAll" && !customEnvimix) {
-            int envi = Math::Rand(0, tmAllCompatibleTitlepacks.Length);
-            params.Set("titlepack", tmAllCompatibleTitlepacks[envi]);
+        if (TM::CurrentTitlePack() == "TMAll") {
+            params.Set("titlepack", string::Join(tmAllCompatibleTitlepacks, ","));
         } else {
             params.Set("titlepack", TM::CurrentTitlePack());
         }
