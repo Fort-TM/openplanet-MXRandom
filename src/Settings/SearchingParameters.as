@@ -79,6 +79,12 @@ namespace PluginSettings {
     array<int> EnvironmentsArr = {};
 
     [Setting hidden]
+    int MinAwards = 0;
+
+    [Setting hidden]
+    int MaxAwards = 0;
+
+    [Setting hidden]
     int MinRecords = 0;
 
     [Setting hidden]
@@ -119,6 +125,8 @@ namespace PluginSettings {
             ExcludedTermsArr = {};
             ExcludedAuthorsArr = {};
             DifficultiesArray = {};
+            MinAwards = 0;
+            MaxAwards = 0;
             MinRecords = 0;
             MaxRecords = 0;
             TermsExactMatch = false;
@@ -425,6 +433,24 @@ namespace PluginSettings {
 #endif
 
         Vehicles = string::Join(VehiclesArr, ",");
+
+        UI::PaddedHeaderSeparator("Awards");
+
+        UI::SetItemText("Min:", 250);
+        MinAwards = UI::InputInt("##MinAwardsFilter", MinAwards, 0);
+        UI::SettingDescription("Minimum amount of awards the map received on " + MX_NAME + ".");
+
+        if (MinAwards != 0 && UI::ResetButton()) {
+            MinAwards = 0;
+        }
+
+        UI::SetItemText("Max:", 250, inSameLine);
+        MaxAwards = UI::InputInt("##MaxAwardsFilter", MaxAwards, 0);
+        UI::SettingDescription("Maximum amount of awards the map received on " + MX_NAME + ".");
+
+        if (MaxAwards != 0 && UI::ResetButton()) {
+            MaxAwards = 0;
+        }
 
 #if TMNEXT
         UI::PaddedHeaderSeparator("Records");

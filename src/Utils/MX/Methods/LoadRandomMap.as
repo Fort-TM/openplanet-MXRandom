@@ -356,6 +356,14 @@ namespace MX {
                 params.Set("maptype", "TM_" + tostring(PluginSettings::MapType));
             }
 
+            if (PluginSettings::MinAwards > 0) {
+                params.Set("awardsmin", tostring(PluginSettings::MinAwards));
+            }
+
+            if (PluginSettings::MaxAwards > 0) {
+                params.Set("awardsmax", tostring(PluginSettings::MaxAwards));
+            }
+
             bool supportsRecords = PluginSettings::MapType != MapTypes::Platform && PluginSettings::MapType != MapTypes::Royal;
 
             if (supportsRecords) {
