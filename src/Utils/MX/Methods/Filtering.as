@@ -132,6 +132,11 @@ namespace MX {
             return true;
         }
 
+        if (map.Name.ToLower().Contains("unvalidated")) {
+            Log::Warn("Map is unvalidated and most likely impossible.");
+            return true;
+        }
+
         return impossibleMaps.Find(map) > -1;
     }
 }
