@@ -38,6 +38,7 @@ namespace MX {
         string PlayerName; // for RMT
         int TimerStart;
         int TimerEnd;
+        bool Highlighted;
 
         bool CountAttempts = true;
 
@@ -137,6 +138,7 @@ namespace MX {
                 TimerEnd = json.Get("TimerEnd", 0);
                 Result = RMC::MapResult(int(json.Get("Result", 0)));
                 PlayerName = json.Get("PlayerName", "");
+                Highlighted = json.Get("Highlighted", false);
             } catch {
                 Name = json["Name"];
                 Log::Warn("Error parsing infos for the map: " + Name + "\nReason: " + getExceptionInfo(), true);
@@ -199,6 +201,7 @@ namespace MX {
                 json["PlayerName"] = PlayerName;
                 json["TimerStart"] = TimerStart;
                 json["TimerEnd"] = TimerEnd;
+                json["Highlighted"] = Highlighted;
 
                 @jsonCache = json;
             } catch {
@@ -309,6 +312,7 @@ namespace MX {
                 jsonCache["SessionPB"] = SessionPB;
                 jsonCache["GoalTime"] = GoalTime;
                 jsonCache["PlayerName"] = PlayerName;
+                jsonCache["Highlighted"] = Highlighted;
 
                 Log::Trace("Updated JSON cache for " + this.toString());
                 Log::Trace("New cache: " + Json::Write(jsonCache, true));

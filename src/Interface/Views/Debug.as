@@ -105,12 +105,13 @@ namespace DebugView {
         UI::PushStyleColor(UI::Col::TableRowBg, vec4(0.13f, 0.13f, 0.13f, 1));
         UI::PushStyleVar(UI::StyleVar::CellPadding, UI::GetStyleVarVec2(UI::StyleVar::CellPadding) + vec2(6, 1));
 
-        if (UI::BeginTable("RunMaps", 6, UI::TableFlags::ScrollY | UI::TableFlags::RowBg | UI::TableFlags::PadOuterX)) {
+        if (UI::BeginTable("RunMaps", 7, UI::TableFlags::ScrollY | UI::TableFlags::RowBg | UI::TableFlags::PadOuterX)) {
             UI::TableSetupScrollFreeze(0, 1);
 
             UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);
             UI::TableSetupColumn("Author", UI::TableColumnFlags::WidthStretch);
             UI::TableSetupColumn("Played At", UI::TableColumnFlags::WidthFixed);
+            UI::TableSetupColumn("Highlighted", UI::TableColumnFlags::WidthFixed);
             UI::TableSetupColumn("Attempts", UI::TableColumnFlags::WidthFixed);
             UI::TableSetupColumn("Result", UI::TableColumnFlags::WidthFixed);
             UI::TableSetupColumn("Tags", UI::TableColumnFlags::WidthStretch);
@@ -132,6 +133,9 @@ namespace DebugView {
 
                     UI::TableNextColumn();
                     UI::Text(Time::FormatString("%F %T", map.PlayedAt));
+
+                    UI::TableNextColumn();
+                    UI::Text(tostring(map.Highlighted));
 
                     UI::TableNextColumn();
                     UI::Text(tostring(map.Attempts));

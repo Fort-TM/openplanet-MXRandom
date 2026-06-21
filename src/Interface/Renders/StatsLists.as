@@ -4,7 +4,8 @@ namespace Render {
         UI::PushStyleColor(UI::Col::TableRowBg, vec4(0.13f, 0.13f, 0.13f, 1));
         UI::PushStyleVar(UI::StyleVar::CellPadding, UI::GetStyleVarVec2(UI::StyleVar::CellPadding) + vec2(6, 2));
 
-        if (UI::BeginTable("MapsTable", 10, UI::TableFlags::SizingFixedFit | UI::TableFlags::Hideable | UI::TableFlags::ScrollY | UI::TableFlags::NoKeepColumnsVisible | UI::TableFlags::RowBg | UI::TableFlags::PadOuterX)) {
+        if (UI::BeginTable("MapsTable", 11, UI::TableFlags::SizingFixedFit | UI::TableFlags::Hideable | UI::TableFlags::ScrollY | UI::TableFlags::NoKeepColumnsVisible | UI::TableFlags::RowBg | UI::TableFlags::PadOuterX)) {
+            UI::TableSetupColumn("##Highlighted", UI::TableColumnFlags::WidthFixed);
             UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);
             UI::TableSetupColumn("Author", UI::TableColumnFlags::WidthFixed, 200);
             UI::TableSetupColumn("Time spent");
@@ -14,10 +15,10 @@ namespace Render {
             UI::TableSetupColumn("Delta");
             UI::TableSetupColumn("Result");
             UI::TableSetupColumn("Player");
-            UI::TableSetupColumn("");
+            UI::TableSetupColumn("##Buttons");
             UI::TableHeadersRow();
 
-            UI::TableSetColumnEnabled(8, stats.Mode == RMC::GameMode::Together);
+            UI::TableSetColumnEnabled(9, stats.Mode == RMC::GameMode::Together);
 
             UI::ListClipper clipper(stats.FilteredMaps.Length);
 
@@ -31,6 +32,13 @@ namespace Render {
                     UI::TableNextColumn();
                     UI::AlignTextToFramePadding();
 
+                    if (map.Highlighted) {
+                        UI::Text("\\$FE0" + Icons::Star);
+                        UI::SetItemTooltip("Map has been highlighted while playing.");
+                    }
+
+                    UI::TableNextColumn();
+                    UI::AlignTextToFramePadding();
                     UI::Text(map.Name);
                     UI::MXMapThumbnailTooltip(map.MapId);
 

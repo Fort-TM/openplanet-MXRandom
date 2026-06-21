@@ -8,11 +8,15 @@ namespace PluginSettings {
     [Setting hidden]
     VirtualKey S_WindowToggle = VirtualKey(0);
 
+    [Setting hidden]
+    VirtualKey S_HighlightMap = VirtualKey(0);
+
     enum HotkeySetting {
         None,
         Quick_Map,
         Quick_Map_Filters,
-        Window
+        Window,
+        HighlightMap
     }
 
     HotkeySetting DetectingSetting = HotkeySetting::None;
@@ -75,6 +79,21 @@ namespace PluginSettings {
         }
 
         UI::EndDisabled();
+
+        RenderHotkeyCombo("Highlight current map", S_HighlightMap, HotkeySetting::HighlightMap);
+        UI::SettingDescription("Highlights / Unhighlights the current map during a run. Useful to revisit specific maps.\n\nHighlighted maps can be accessed through the map list in the Statistics window once the run is finished.");
+
+        UI::SameLine();
+
+        UI::BeginDisabled(ListeningForKey);
+
+        if (DetectingSetting == HotkeySetting::HighlightMap) {
+            UI::Text("Press a key");
+        } else if (UI::GreyButton("Detect##HighlightMap")) {
+            DetectingSetting = HotkeySetting::HighlightMap;
+        }
+
+        UI::EndDisabled();
     }
 
     string GetKeyName(VirtualKey key) {
@@ -99,7 +118,8 @@ namespace PluginSettings {
         array<VirtualKey> usedKeys = {
             S_QuickMapKey,
             S_QuickMapFiltersKey,
-            S_WindowToggle
+            S_WindowToggle,
+            S_HighlightMap
         };
 
         return usedKeys.Find(key) > -1;
@@ -121,6 +141,10 @@ namespace PluginSettings {
         if (S_WindowToggle == key) {
             S_WindowToggle = VirtualKey(0);
         }
+
+        if (S_HighlightMap == key) {
+            S_HighlightMap = VirtualKey(0);
+        }
     }
 
     void AssignHotkey(VirtualKey key) {
@@ -139,6 +163,9 @@ namespace PluginSettings {
                 break;
             case HotkeySetting::Window:
                 S_WindowToggle = key;
+                break;
+            case HotkeySetting::HighlightMap:
+                S_HighlightMap = key;
                 break;
         }
 

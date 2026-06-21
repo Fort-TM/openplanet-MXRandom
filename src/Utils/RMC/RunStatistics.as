@@ -327,20 +327,26 @@ class RunStatistics {
         Log::Trace("Finished loading run statistics.");
     }
 
-    void Filter(RMC::MapResult result, string _search) {
+    void Filter(RMC::MapResult result, string _search, bool g_highlighted = false) {
         FilteredMaps.RemoveRange(0, FilteredMaps.Length);
         _search = _search.ToLower();
 
-        if (result == RMC::MapResult::None && _search == "") {
+        if (result == RMC::MapResult::None && _search == "" && !g_highlighted) {
             FilteredMaps = Maps;
             return;
         }
 
         for (uint i = 0; i < Maps.Length; i++) {
-            if (Maps[i].Result == result || result == RMC::MapResult::None) {
-                if (Maps[i].Name.ToLower().Contains(_search) || Maps[i].Username.ToLower().Contains(_search)) {
-                    FilteredMaps.InsertLast(Maps[i]);
-                }
+            if (Maps[i].Result != result && result != RMC::MapResult::None) {
+                continue;
+            }
+
+            if (g_highlighted && !Maps[i].Highlighted) {
+                continue;
+            }
+
+            if (Maps[i].Name.ToLower().Contains(_search) || Maps[i].Username.ToLower().Contains(_search)) {
+                FilteredMaps.InsertLast(Maps[i]);
             }
         }
     }

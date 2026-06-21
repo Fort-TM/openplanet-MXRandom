@@ -3,6 +3,7 @@ namespace StatsView {
     ProgressPlot g_progressPlot = ProgressPlot::Medals_Timeline;
     RMC::MapResult g_selectedResult = RMC::MapResult::None;
     string g_search = "";
+    bool g_highlighted = false;
 
     enum AttemptsPlot {
         Histogram,
@@ -20,6 +21,7 @@ namespace StatsView {
         g_progressPlot = ProgressPlot::Medals_Timeline;
         g_selectedResult = RMC::MapResult::None;
         g_search = "";
+        g_highlighted = false;
     }
 
     void GeneralTab(RunStatistics@ stats) {
@@ -170,7 +172,7 @@ namespace StatsView {
 
                 if (UI::Selectable(comboName, g_selectedResult == RMC::MapResult(i))) {
                     g_selectedResult = RMC::MapResult(i);
-                    stats.Filter(RMC::MapResult(i), g_search);
+                    stats.Filter(RMC::MapResult(i), g_search, g_highlighted);
                 }
 
                 UI::EndDisabled();
@@ -183,13 +185,26 @@ namespace StatsView {
         UI::Separator(UI::SeparatorFlags::Vertical);
         UI::SameLine();
 
+        bool oldValue = g_highlighted;
+
+        g_highlighted = UI::Checkbox("Highlighted", g_highlighted);
+        UI::SetItemTooltip("Only display highlighted maps during the run.\n\nTo highlight a map, use the \"Highlight current map\" hotkey.");
+
+        if (oldValue != g_highlighted) {
+            stats.Filter(g_selectedResult, g_search, g_highlighted);
+        }
+
+        UI::SameLine();
+        UI::Separator(UI::SeparatorFlags::Vertical);
+        UI::SameLine();
+
         bool changed = false;
 
         g_search = UI::InputText("Search", g_search, changed);
         UI::SetItemTooltip("Search by map name or author");
 
         if (changed) {
-            stats.Filter(g_selectedResult, g_search);
+            stats.Filter(g_selectedResult, g_search, g_highlighted);
         }
 
         Render::StatsMapsList(stats);

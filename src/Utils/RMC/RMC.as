@@ -262,6 +262,19 @@ class RMC {
         IsPaused = false;
     }
 
+    void HighlightCurrentMap() {
+        if ((!IsRunning && !IsStarting) || IsSwitchingMap) {
+            return;
+        }
+
+        if (currentMap is null) {
+            return;
+        }
+
+        currentMap.Highlighted = !currentMap.Highlighted;
+        UI::ShowNotification((currentMap.Highlighted ? "Highlighted" : "Unhighlighted") + " " + currentMap.Name);
+    }
+
     bool get_ModeHasBelowMedal() {
         return RunConfig.GoalMedal != Medals::Bronze;
     }

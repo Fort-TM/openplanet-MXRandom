@@ -94,6 +94,11 @@ UI::InputBlocking OnKeyPress(bool down, VirtualKey key) {
         return UI::InputBlocking::Block;
     }
 
+    if (key == PluginSettings::S_HighlightMap) {
+        RMC::currentRun.HighlightCurrentMap();
+        return UI::InputBlocking::Block;
+    }
+
     return UI::InputBlocking::DoNothing;
 }
 
