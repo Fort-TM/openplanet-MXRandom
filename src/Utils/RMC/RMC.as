@@ -513,7 +513,18 @@ class RMC {
 
                     if (RunConfig.InvalidateGhosts && IsMapInvalidated) {
                         UI::Text("\\$f80" + Icons::ExclamationTriangle + "\\$z Invalidated map");
-                        UI::SetItemTooltip("You have watched a ghost on this map, you won't be able to get any remaining medals.\n\nYou will have to skip it or stop the run.");
+                        if (UI::BeginItemTooltip()) {
+                            UI::Text("You have watched a ghost on this map, you won't be able to get any remaining medals.");
+                            UI::NewLine();
+
+                            if (RunConfig.Category == RMC::Category::Custom || this.Mode == RMC::GameMode::Objective) {
+                                UI::Text("You can edit the run settings and disable \"Disallow watching ghosts\" to continue playing the map.");
+                            } else {
+                                UI::Text("You will have to skip it or stop the run.");
+                            }
+
+                            UI::EndTooltip();
+                        }
                     }
 #endif
 
