@@ -171,7 +171,7 @@ namespace MX {
             }
 
             if (PluginSettings::ExcludedTerms != "") {
-                string termsRegex = string::Join(PluginSettings::ExcludedTermsArr, "|");
+                string termsRegex = Text::Join(PluginSettings::ExcludedTermsArr, "|");
 
                 if (PluginSettings::TermsExactMatch) {
                     // Use word boundaries to only find exact matches
@@ -264,7 +264,7 @@ namespace MX {
 #elif MP4
 
         if (TM::CurrentTitlePack() == "TMAll") {
-            params.Set("titlepack", string::Join(tmAllCompatibleTitlepacks, ","));
+            params.Set("titlepack", Text::Join(tmAllCompatibleTitlepacks, ","));
         } else {
             params.Set("titlepack", TM::CurrentTitlePack());
         }
@@ -448,6 +448,6 @@ namespace MX {
             formattedParams.InsertLast(key + "=" + Net::UrlEncode(value.Trim()));
         }
 
-        return "?" + string::Join(formattedParams, "&");
+        return "?" + Text::Join(formattedParams, "&");
     }
 }

@@ -33,7 +33,7 @@ class RMCRulesModalDialog : ModalDialog {
                         rules.InsertLast("- " + string(m_rulesJson["general"][i]));
                     }
 
-                    UI::Markdown(string::Join(rules, "\n\n"));
+                    UI::Markdown(Text::Join(rules, "\n\n"));
                     UI::EndTabItem();
                 }
 
@@ -42,7 +42,7 @@ class RMCRulesModalDialog : ModalDialog {
                         rules.InsertLast("- " + string(m_rulesJson["challenge"][i]));
                     }
 
-                    UI::Markdown(string::Join(rules, "\n\n"));
+                    UI::Markdown(Text::Join(rules, "\n\n"));
                     UI::EndTabItem();
                 }
 
@@ -51,7 +51,7 @@ class RMCRulesModalDialog : ModalDialog {
                         rules.InsertLast("- " + string(m_rulesJson["survival"][i]));
                     }
 
-                    UI::Markdown(string::Join(rules, "\n\n"));
+                    UI::Markdown(Text::Join(rules, "\n\n"));
                     UI::EndTabItem();
                 }
 
@@ -60,7 +60,7 @@ class RMCRulesModalDialog : ModalDialog {
                         rules.InsertLast("- " + string(m_rulesJson["objective"][i]));
                     }
 
-                    UI::Markdown(string::Join(rules, "\n\n"));
+                    UI::Markdown(Text::Join(rules, "\n\n"));
                     UI::EndTabItem();
                 }
 

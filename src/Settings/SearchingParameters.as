@@ -432,7 +432,7 @@ namespace PluginSettings {
         UI::SettingDescription("\\$f90" + Icons::ExclamationTriangle + "\\$z This will filter by the base vehicle used by the map, it won't include maps that use car triggers instead.\n\nTo include those maps, consider filtering by tags instead.");
 #endif
 
-        Vehicles = string::Join(VehiclesArr, ",");
+        Vehicles = Text::Join(VehiclesArr, ",");
 
         UI::PaddedHeaderSeparator("Awards");
 

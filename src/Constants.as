@@ -86,4 +86,4 @@ const array<string> MAP_FIELDS_ARRAY = {
     "AuthorBeaten",
     "AuthorBeatable"
 };
-const string MAP_FIELDS = string::Join(MAP_FIELDS_ARRAY, ",");
+const string MAP_FIELDS = Text::Join(MAP_FIELDS_ARRAY, ",");
