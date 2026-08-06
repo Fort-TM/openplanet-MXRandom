@@ -97,6 +97,9 @@ namespace PluginSettings {
     [Setting hidden]
     MapTypes MapType = MapTypes::Race;
 
+    [Setting hidden]
+    bool BetaMaps = false;
+
     [SettingsTab name="Filters" order="2" icon="Filter"]
     void RenderSearchingSettingTab() {
         bool inSameLine = UI::GetContentRegionAvail().x > 950;
@@ -131,6 +134,7 @@ namespace PluginSettings {
             MaxRecords = 0;
             TermsExactMatch = false;
             MapType = MapTypes::Race;
+            BetaMaps = false;
 #if TMNEXT
             ExcludeMapTagsArr = {6, 10, 23, 37, 40, 46, 49};
 #else
@@ -522,6 +526,9 @@ namespace PluginSettings {
 
         UI::SettingDescription("The game mode of the map.\n\n\\$f90" + Icons::ExclamationTriangle + "\\$z Only Race will work online!");
 #endif
+
+        BetaMaps = UI::Checkbox("Beta maps", BetaMaps);
+        UI::SettingDescription("If enabled, the plugin will search for maps uploaded to the Beta Area on " + SHORT_MX);
     }
 
     array<int> ToggleMapTag(array<int> tags, int tagID) {

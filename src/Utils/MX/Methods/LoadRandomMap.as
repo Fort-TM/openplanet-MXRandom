@@ -389,6 +389,10 @@ namespace MX {
 #endif
                 }
             }
+
+            if (PluginSettings::BetaMaps) {
+                params.Set("inbeta", "1");
+            }
         } else {
             params.Set("maptype", SUPPORTED_MAP_TYPE);
             params.Set("authortimemax", tostring(RMC::config.length));
