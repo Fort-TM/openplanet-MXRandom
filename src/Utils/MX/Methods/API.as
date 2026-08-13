@@ -86,14 +86,6 @@ namespace MX {
 
     void FetchVehicles() {
         m_vehicles.RemoveRange(0, m_vehicles.Length);
-
-#if TMNEXT
-        // TMNEXT doesn't support custom vehicles, so we can skip the API call
-        m_vehicles.InsertLast("CarSport");
-        m_vehicles.InsertLast("CarSnow");
-        m_vehicles.InsertLast("CarRally");
-        m_vehicles.InsertLast("CarDesert");
-#else
         APIRefreshing = true;
 
         try {
@@ -104,9 +96,17 @@ namespace MX {
                     continue;
                 }
 
-                Log::Trace("[FetchVehicles] Loading vehicle " + string(res[i]));
+                string vehicleName = res[i];
 
-                m_vehicles.InsertLast(res[i]);
+#if TMNEXT
+                // Vehicle can crash the game
+                if (vehicleName.ToLower() == "characterpilot") {
+                    continue;
+                }
+#endif
+                Log::Trace("[FetchVehicles] Loading vehicle " + vehicleName);
+
+                m_vehicles.InsertLast(vehicleName);
             }
 
             Log::Trace(m_vehicles.Length + " vehicles loaded");
@@ -118,7 +118,6 @@ namespace MX {
             APIDown = true;
             APIRefreshing = false;
         }
-#endif
     }
 
     void GetImpossibleMaps() {
